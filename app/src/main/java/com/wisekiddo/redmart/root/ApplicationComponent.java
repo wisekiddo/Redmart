@@ -2,6 +2,9 @@ package com.wisekiddo.redmart.root;
 
 import android.app.Application;
 
+import com.wisekiddo.redmart.data.source.ItemRepository;
+import com.wisekiddo.redmart.data.source.RepositoryModule;
+
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
@@ -14,15 +17,23 @@ import dagger.android.support.AndroidSupportInjectionModule;
  */
 
 @Singleton
-@Component(modules = {
+@Component(modules = {RepositoryModule.class,
+        ApplicationModule.class,
         ActivityBindingModule.class,
         AndroidSupportInjectionModule.class})
 public interface ApplicationComponent extends AndroidInjector<ApplicationRoot> {
+
+    ItemRepository getItemsRepository();
+
+    // Gives us syntactic sugar. we can then do DaggerAppComponent.builder().application(this).build().inject(this);
+    // never having to instantiate any modules or say which module we are passing the application to.
+    // Application will just be provided into our app graph now.
     @Component.Builder
     interface Builder {
 
         @BindsInstance
         ApplicationComponent.Builder application(Application application);
+
         ApplicationComponent build();
     }
 }

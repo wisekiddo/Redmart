@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Redmart</string>
+    <string name="no_items_all">You have no Items!</string>
+
 </resources>
