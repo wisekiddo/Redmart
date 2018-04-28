@@ -1,9 +1,11 @@
-package com.wisekiddo.redmart;
+package com.wisekiddo.redmart.feature.items;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import com.wisekiddo.redmart.R;
 
-public class ItemActivity extends AppCompatActivity {
+import dagger.android.support.DaggerAppCompatActivity;
+
+public class ItemActivity extends DaggerAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
