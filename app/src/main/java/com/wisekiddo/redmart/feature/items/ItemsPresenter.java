@@ -1,7 +1,7 @@
 package com.wisekiddo.redmart.feature.items;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.wisekiddo.redmart.data.model.Item;
 import com.wisekiddo.redmart.data.source.DataSource;
@@ -24,11 +24,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ActivityScoped
 final class ItemsPresenter implements ItemsContract.Presenter {
 
-    private final ItemRepository mItemsRepository;
+    private final ItemRepository itemRepository;
     @Nullable
-    private ItemsContract.View mItemsView;
+    private ItemsContract.View itemsView;
 
-    private boolean mFirstLoad = true;
+    private boolean firstLoad = true;
 
     /**
      * Dagger strictly enforces that arguments not marked with {@code @Nullable} are not injected
@@ -36,42 +36,41 @@ final class ItemsPresenter implements ItemsContract.Presenter {
      */
     @Inject
     ItemsPresenter(ItemRepository itemsRepository) {
-        mItemsRepository = itemsRepository;
+        itemRepository = itemsRepository;
     }
 
     @Override
     public void loadItems(boolean forceUpdate) {
         // Simplification for sample: a network reload will be forced on first load.
-        loadItems(forceUpdate || mFirstLoad, true);
-        mFirstLoad = false;
+        loadItems(forceUpdate || firstLoad, true);
+        firstLoad = false;
     }
 
     private void loadItems(boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI) {
-            if (mItemsView != null) {
-                mItemsView.setLoadingIndicator(true);
+            if (itemsView != null) {
+                itemsView.setLoadingIndicator(true);
             }
         }
         if (forceUpdate) {
-            mItemsRepository.refreshItems();
+            itemRepository.refreshItems();
         }
 
-        mItemsRepository.getItems(new DataSource.LoadItemsCallback() {
+        itemRepository.getItems(new DataSource.LoadItemsCallback() {
             @Override
             public void onItemsLoaded(List<Item> items) {
                 List<Item> itemsToShow = new ArrayList<>();
-
-                // We filter the items based on the requestType
                 for (Item item : items) {
+                    Log.i("DDDDD",item.getId());
                     itemsToShow.add(item);
                 }
                 // The view may not be able to handle UI updates anymore
-                if (mItemsView == null) {
+                if (itemsView == null) {
                     return;
                 }
 
                 if (showLoadingUI) {
-                    mItemsView.setLoadingIndicator(false);
+                    itemsView.setLoadingIndicator(false);
                 }
 
                 processItems(itemsToShow);
@@ -79,7 +78,7 @@ final class ItemsPresenter implements ItemsContract.Presenter {
 
             @Override
             public void onDataNotAvailable() {
-                mItemsView.showLoadingItemsError();
+                itemsView.showLoadingItemsError();
             }
         });
     }
@@ -90,34 +89,34 @@ final class ItemsPresenter implements ItemsContract.Presenter {
             processEmptyItems();
         } else {
             // Show the list of items
-            if (mItemsView != null) {
-                mItemsView.showItems(items);
+            if (itemsView != null) {
+                itemsView.showItems(items);
             }
         }
     }
 
 
     private void processEmptyItems() {
-        mItemsView.showNoItems();
+        itemsView.showNoItems();
     }
 
     @Override
     public void openItemDetails(@NonNull Item requestedItem) {
         checkNotNull(requestedItem, "requestedItem cannot be null!");
-        if (mItemsView != null) {
-            //mItemsView.showItemDetailsUi(requestedItem.getId());
+        if (itemsView != null) {
+           // itemsView.showItemDetailsUi(requestedItem.getId());
         }
     }
 
 
     @Override
     public void takeView(ItemsContract.View view) {
-        this.mItemsView = view;
+        this.itemsView = view;
         loadItems(false);
     }
 
     @Override
     public void dropView() {
-        mItemsView = null;
+        itemsView = null;
     }
 }

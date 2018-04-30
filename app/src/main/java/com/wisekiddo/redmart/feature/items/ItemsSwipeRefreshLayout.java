@@ -8,15 +8,15 @@ import android.view.View;
 /**
  * Created by ronald on 28/4/18.
  */
-public class ItemSwipeRefreshLayout extends SwipeRefreshLayout {
+public class ItemsSwipeRefreshLayout extends SwipeRefreshLayout {
 
     private View mScrollUpChild;
 
-    public ItemSwipeRefreshLayout(Context context) {
+    public ItemsSwipeRefreshLayout(Context context) {
         super(context);
     }
 
-    public ItemSwipeRefreshLayout(Context context, AttributeSet attrs) {
+    public ItemsSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

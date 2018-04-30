@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.wisekiddo.architecture.feature.items.ScrollChildSwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.wisekiddo.redmart.feature.items.ItemsSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,7 +13,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/itemsLL"
+            android:id="@+id/itemsLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -58,9 +57,16 @@
                 android:text="@string/no_items_all"
                 android:layout_marginBottom="@dimen/list_item_padding" />
 
-           
+            <TextView
+                android:id="@+id/noItemsAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/touch_feedback"
+                android:gravity="center"
+                android:text="@string/no_items_all" />
 
         </LinearLayout>
     </RelativeLayout>
-</com.wisekiddo.architecture.feature.items.ScrollChildSwipeRefreshLayout>
+</com.wisekiddo.redmart.feature.items.ItemsSwipeRefreshLayout>
 

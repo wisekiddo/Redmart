@@ -42,7 +42,7 @@ public class RepositoryModule {
     @Singleton
     @Provides
     ApplicationDatabase provideDb(Application context) {
-        return Room.databaseBuilder(context.getApplicationContext(), ApplicationDatabase.class, "Architecture.db")
+        return Room.databaseBuilder(context.getApplicationContext(), ApplicationDatabase.class, "Redmart.db")
                 .build();
     }
 

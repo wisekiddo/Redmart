@@ -3,7 +3,6 @@ package com.wisekiddo.redmart.feature.items;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,18 +40,12 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
     /**
      * Listener for clicks on items in the ListView.
      */
-    ItemListener mItemListener = new ItemListener() {
-        @Override
-        public void onItemClick(Item clickedItem) {
-            presenter.openItemDetails(clickedItem);
-        }
-    };
 
-    private ItemsAdapter mListAdapter;
-    private View mNoItemsView;
-    private ImageView mNoItemIcon;
+
+    private ItemsAdapter listAdapter;
+    private View noItemsView;
+    private ImageView noItemIcon;
     private TextView mNoItemMainView;
-    private TextView mNoItemAddView;
     private LinearLayout mItemsView;
     private TextView mFilteringLabelView;
 
@@ -68,7 +61,7 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new ItemsAdapter(new ArrayList<Item>(0), mItemListener);
+        listAdapter = new ItemsAdapter(new ArrayList<Item>(0), itemListener);
     }
 
     @Override
@@ -84,29 +77,33 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
         // case presenter is orchestrating a long running item
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //presenter.result(requestCode, resultCode);
+    }
+
+    ItemListener itemListener = new ItemListener() {
+        @Override
+        public void onItemClick(Item clickedItem) {
+            presenter.openItemDetails(clickedItem);
+        }
+    };
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.items_fragment, container, false);
 
         // Set up items view
         ListView listView = root.findViewById(R.id.items_list);
-        listView.setAdapter(mListAdapter);
-        mFilteringLabelView = root.findViewById(R.id.filteringLabel);
-        mItemsView = root.findViewById(R.id.itemsLL);
+        listView.setAdapter(listAdapter);
+        //mFilteringLabelView = root.findViewById(R.id.filteringLabel);
+        mItemsView = root.findViewById(R.id.itemsLayout);
 
         // Set up  no items view
-        mNoItemsView = root.findViewById(R.id.noItems);
-        mNoItemIcon = root.findViewById(R.id.noItemsIcon);
+        noItemsView = root.findViewById(R.id.noItems);
+        noItemIcon = root.findViewById(R.id.noItemsIcon);
         mNoItemMainView = root.findViewById(R.id.noItemsMain);
-       // mNoItemAddView = root.findViewById(R.id.noItemsAdd);
-        mNoItemAddView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //showAddItem();
-            }
-        });
 
         // Set up floating action button
        // FloatingActionButton fab = getActivity().findViewById(R.id.fab_add_item);
@@ -120,7 +117,7 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
         });*/
 
         // Set up progress indicator
-        final ItemSwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.refresh_layout);
+        final ItemsSwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
                 ContextCompat.getColor(getActivity(), R.color.colorAccent),
@@ -162,10 +159,10 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
 
     @Override
     public void showItems(List<Item> items) {
-        mListAdapter.replaceData(items);
+        listAdapter.replaceData(items);
 
         mItemsView.setVisibility(View.VISIBLE);
-        mNoItemsView.setVisibility(View.GONE);
+        noItemsView.setVisibility(View.GONE);
     }
 
     @Override
@@ -179,12 +176,11 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
 
     private void showNoItemsViews(String mainText, int iconRes, boolean showAddView) {
         mItemsView.setVisibility(View.GONE);
-        mNoItemsView.setVisibility(View.VISIBLE);
+        noItemsView.setVisibility(View.VISIBLE);
 
         mNoItemMainView.setText(mainText);
         //noinspection deprecation
-        mNoItemIcon.setImageDrawable(getResources().getDrawable(iconRes));
-        mNoItemAddView.setVisibility(showAddView ? View.VISIBLE : View.GONE);
+        noItemIcon.setImageDrawable(getResources().getDrawable(iconRes));
     }
 
     @Override
@@ -244,7 +240,7 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
             final Item item = getItem(i);
 
             TextView titleTV = rowView.findViewById(R.id.title);
-            //titleTV.setText(item.getTitleForList());
+            titleTV.setText(item.getTitle());
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

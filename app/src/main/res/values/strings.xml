@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Redmart</string>
     <string name="no_items_all">You have no Items!</string>
+    <string name="navigation_view_header_title">Items</string>
+    <string name="list_title">Item List</string>
+
 
 </resources>
