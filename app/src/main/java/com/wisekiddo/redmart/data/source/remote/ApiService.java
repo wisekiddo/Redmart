@@ -19,4 +19,6 @@ public interface ApiService {
             @Query("page") Integer page,
             @Query("pageSize") Integer pageSize);
 
+
+
 }

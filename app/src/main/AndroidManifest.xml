@@ -19,6 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.wisekiddo.redmart.feature.itemdetail.ItemDetailActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d2f8bdf97892b03a17db1070d451b1bc2756be7a" />

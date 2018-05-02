@@ -23,6 +23,8 @@ public interface ItemsContract {
 
         void showItems(List<Item> items);
 
+        void showItemDetailsUi(String itemId);
+
         void showLoadingItemsError();
 
         void showNoItems();

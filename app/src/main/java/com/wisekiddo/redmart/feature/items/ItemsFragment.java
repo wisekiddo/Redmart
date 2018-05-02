@@ -27,6 +27,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
+
+import com.wisekiddo.redmart.feature.itemdetail.ItemDetailActivity;
 import com.wisekiddo.redmart.root.ActivityScoped;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -185,6 +187,14 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
     }
 
 
+    @Override
+    public void showItemDetailsUi(String itemId) {
+        //Shown in it's own Activity, since it makes more sense that way
+        // and it gives us the flexibility to show some Intent stubbing.
+        Intent intent = new Intent(getContext(), ItemDetailActivity.class);
+        intent.putExtra(ItemDetailActivity.EXTRA_ITEM_ID, itemId.toString());
+        startActivity(intent);
+    }
 
 
     private static class ItemsAdapter extends BaseAdapter {
@@ -232,16 +242,22 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
             }
 
             final Item item = getItem(i);
-           Log.e("IMAGE_URL", BASE_IMAGE_URL+item.getImg().getName());
+
             TextView titleView = rowView.findViewById(R.id.title);
-            titleView.setText(item.getTitle());
+            titleView.setText(item.getTitle().trim());
+
+            TextView descriptionView = rowView.findViewById(R.id.description);
+            descriptionView.setText(item.getDesc());
+
+            TextView price = rowView.findViewById(R.id.price);
+            String strPrice = "Price: $"+String.format("%.2f", item.getPricing().getPrice());
+            price.setText(strPrice);
 
             ImageView imageView = rowView.findViewById(R.id.image);
-
-            //Picasso.get().load(BASE_IMAGE_URL+item.getImg().getName()).into(imageView);
             Picasso.get().load(BASE_IMAGE_URL+item.getImg().getName())
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_STORE)
                     .into(imageView);
+
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

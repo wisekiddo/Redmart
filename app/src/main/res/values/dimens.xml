@@ -9,4 +9,8 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="cardview_radius">5dp</dimen>
+    <dimen name="thumb_width">120dp</dimen>
+    <dimen name="thumb_height">180dp</dimen>
+
 </resources>

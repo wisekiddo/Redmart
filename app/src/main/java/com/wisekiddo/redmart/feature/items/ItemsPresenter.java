@@ -61,7 +61,6 @@ final class ItemsPresenter implements ItemsContract.Presenter {
             public void onItemsLoaded(List<Item> items) {
                 List<Item> itemsToShow = new ArrayList<>();
                 for (Item item : items) {
-                    Log.i("DDDDD",item.getId()+"");
                     itemsToShow.add(item);
                 }
                 // The view may not be able to handle UI updates anymore
@@ -104,7 +103,7 @@ final class ItemsPresenter implements ItemsContract.Presenter {
     public void openItemDetails(@NonNull Item requestedItem) {
         checkNotNull(requestedItem, "requestedItem cannot be null!");
         if (itemsView != null) {
-           // itemsView.showItemDetailsUi(requestedItem.getId());
+           itemsView.showItemDetailsUi(requestedItem.getId().toString());
         }
     }
 
