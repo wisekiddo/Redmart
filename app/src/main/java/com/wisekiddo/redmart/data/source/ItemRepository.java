@@ -8,7 +8,6 @@ import com.wisekiddo.redmart.data.source.local.Local;
 import com.wisekiddo.redmart.data.source.remote.Remote;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ItemRepository implements DataSource {
 
     private final DataSource itemsRemoteDataSource;
-
     private final DataSource itemsLocalDataSource;
 
     Map<Integer, Item> mCachedItems;

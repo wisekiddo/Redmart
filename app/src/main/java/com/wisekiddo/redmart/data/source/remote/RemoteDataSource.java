@@ -100,7 +100,6 @@ public class RemoteDataSource implements DataSource {
             @Override
             public void onFailure(Call<Catalog> call, Throwable t) {
                 t.printStackTrace();
-                // TODO: 08/11/16 handle failure
             }
         });
     }
@@ -123,6 +122,38 @@ public class RemoteDataSource implements DataSource {
     public void getItem(@NonNull Integer itemId, final @NonNull GetItemCallback callback) {
         final Item item = mapItems.get(itemId);
 
+        Call<Item> productResponseCall = service.getProduct(itemId);
+        productResponseCall.enqueue(new Callback<Item>() {
+            @Override
+            public void onResponse(Call<Item> call, Response<Item> response) {
+                if (response.isSuccessful()) {
+
+                    Item item = response.body();
+                    addItem(item);
+
+                    Log.i("Current Page",item.getTitle()+"");
+                }
+                else {
+                    // error case
+                    switch (response.code()) {
+                        case 404:
+                            Log.e(this.getClass().getSimpleName(), "not found : 404");
+                            break;
+                        case 500:
+                            Log.e(this.getClass().getSimpleName(), "server broken: 500");
+                            break;
+                        default:
+                            Log.e(this.getClass().getSimpleName(), "unknown error");
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Item> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
         // Simulate network by delaying the execution.
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -131,6 +162,7 @@ public class RemoteDataSource implements DataSource {
                 callback.onItemLoaded(item);
             }
         }, SERVICE_LATENCY_IN_MILLIS);
+
     }
 
 
