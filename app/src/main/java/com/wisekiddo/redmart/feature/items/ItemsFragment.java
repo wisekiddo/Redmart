@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 import com.wisekiddo.redmart.R;
 import com.wisekiddo.redmart.data.model.Item;
 
@@ -188,6 +191,8 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
 
         private List<Item> mItems;
         private ItemListener mItemListener;
+        private static final String BASE_IMAGE_URL = "http://media.redmart.com/newmedia/200p";
+
 
         public ItemsAdapter(List<Item> items, ItemListener itemListener) {
             setList(items);
@@ -227,9 +232,16 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
             }
 
             final Item item = getItem(i);
+           Log.e("IMAGE_URL", BASE_IMAGE_URL+item.getImg().getName());
+            TextView titleView = rowView.findViewById(R.id.title);
+            titleView.setText(item.getTitle());
 
-            TextView titleTV = rowView.findViewById(R.id.title);
-            titleTV.setText(item.getTitle());
+            ImageView imageView = rowView.findViewById(R.id.image);
+
+            //Picasso.get().load(BASE_IMAGE_URL+item.getImg().getName()).into(imageView);
+            Picasso.get().load(BASE_IMAGE_URL+item.getImg().getName())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(imageView);
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

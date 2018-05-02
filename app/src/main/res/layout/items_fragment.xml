@@ -20,10 +20,12 @@
 
             <TextView
                 android:id="@+id/filteringLabel"
+                android:text = "@string/list_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/list_item_padding"
                 android:layout_marginRight="@dimen/list_item_padding"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -57,14 +59,6 @@
                 android:text="@string/no_items_all"
                 android:layout_marginBottom="@dimen/list_item_padding" />
 
-            <TextView
-                android:id="@+id/noItemsAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:background="@drawable/touch_feedback"
-                android:gravity="center"
-                android:text="@string/no_items_all" />
 
         </LinearLayout>
     </RelativeLayout>

@@ -28,15 +28,16 @@ public class RemoteDataSource implements DataSource {
 
     private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
 
-    private final static Map<Integer, Item> ITEMS_SERVICE_DATA;
+    private final static Map<Integer, Item> mapItems;
 
     private ApiService service;
 
     static {
+        mapItems = new LinkedHashMap<>();
         //For test, TODO: male a mockito
         /*
        final int RANGE = 100;
-       ITEMS_SERVICE_DATA = new LinkedHashMap<>(RANGE);
+       mapItems = new LinkedHashMap<>(RANGE);
         for (int i=RANGE;i<RANGE+RANGE;i++) {
            addItem("Title:"+(i+1), "Ground looks good,"+ (i+1)+" no foundation work required.");
         }
@@ -45,11 +46,6 @@ public class RemoteDataSource implements DataSource {
     public RemoteDataSource(){}
 
 
-    private static void addItem(String title, String description) {
-        Item newItem = new Item(title, description, 1);
-        ITEMS_SERVICE_DATA.put(newItem.getId(), newItem);
-    }
-
     @Override
     public void getItems(final @NonNull LoadItemsCallback callback) {
         // Simulate network by delaying the execution.
@@ -57,7 +53,7 @@ public class RemoteDataSource implements DataSource {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                callback.onItemsLoaded(Lists.newArrayList(ITEMS_SERVICE_DATA.values()));
+                callback.onItemsLoaded(Lists.newArrayList(mapItems.values()));
             }
         }, SERVICE_LATENCY_IN_MILLIS);
         service = ApiClient.getClient().create(ApiService.class);
@@ -70,17 +66,21 @@ public class RemoteDataSource implements DataSource {
         catalogResponseCall.enqueue(new Callback<Catalog>() {
             @Override
             public void onResponse(Call<Catalog> call, Response<Catalog> response) {
-
                 if (response.isSuccessful()) {
-                    Log.i("--->",response.body().getPage()+"");
-                    List<Item> results = fetchResults(response);
-                    // adapter.addAll(results);
-                    Integer page = response.body().getPage().intValue() + 1;
-                    Integer total = response.body().getTotal().intValue();
-                    if(page<total){
 
+                    Catalog catalog = response.body();
+                    Integer page = catalog.getPage()+ 1;
+                    Integer total = catalog.getTotal();
+
+                    List<Item> items = catalog.getItems();
+                    for( Item item:items){
+                        addItem(item);
+                    }
+                    Log.i("Current Page",catalog.getPage()+"");
+                    if(page<total){
                         loadNextPage(page);
-                    }                }
+                    }
+                }
                 else {
                     // error case
                     switch (response.code()) {
@@ -104,6 +104,12 @@ public class RemoteDataSource implements DataSource {
             }
         });
     }
+
+
+    private static void addItem(Item item) {
+        mapItems.put(item.getId(), item);
+    }
+
     /**
      * @param response extracts List<{@link Item>} from response
      * @return
@@ -115,7 +121,7 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public void getItem(@NonNull Integer itemId, final @NonNull GetItemCallback callback) {
-        final Item item = ITEMS_SERVICE_DATA.get(itemId);
+        final Item item = mapItems.get(itemId);
 
         // Simulate network by delaying the execution.
         Handler handler = new Handler();
@@ -132,7 +138,7 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public void saveItem(@NonNull Item item) {
-        ITEMS_SERVICE_DATA.put(item.getId(), item);
+        mapItems.put(item.getId(), item);
     }
 
 
@@ -144,11 +150,11 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public void deleteAllItems() {
-        ITEMS_SERVICE_DATA.clear();
+        mapItems.clear();
     }
 
     @Override
     public void deleteItem(@NonNull Integer itemId) {
-        ITEMS_SERVICE_DATA.remove(itemId);
+        mapItems.remove(itemId);
     }
 }
