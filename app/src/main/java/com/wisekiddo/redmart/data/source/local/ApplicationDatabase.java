@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
 import com.wisekiddo.redmart.data.model.Item;
+import com.wisekiddo.redmart.data.source.local.dao.ItemsDao;
 
 /**
  * Created by ronald on 13/3/18.

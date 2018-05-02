@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.wisekiddo.redmart.data.model.Item;
 import com.wisekiddo.redmart.data.source.DataSource;
+import com.wisekiddo.redmart.data.source.local.dao.ItemsDao;
 import com.wisekiddo.redmart.util.ApplicationExecutors;
 
 import java.util.List;
@@ -57,11 +58,11 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override
-    public void getItem(@NonNull final String taskId, @NonNull final GetItemCallback callback) {
+    public void getItem(@NonNull final Integer id, @NonNull final GetItemCallback callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final Item item = mItemsDao.getItemById(taskId);
+                final Item item = mItemsDao.getItemById(id);
 
                 mApplicationExecutors.mainThread().execute(new Runnable() {
                     @Override
@@ -92,8 +93,6 @@ public class LocalDataSource implements DataSource {
     }
 
 
-
-
     @Override
     public void refreshItems() {
         // Not required because the {@link ItemRepository} handles the logic of refreshing the
@@ -113,7 +112,7 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override
-    public void deleteItem(@NonNull final String taskId) {
+    public void deleteItem(@NonNull final Integer taskId) {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {

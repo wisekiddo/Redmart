@@ -1,6 +1,7 @@
 package com.wisekiddo.redmart.feature.items;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,6 +28,9 @@ public class ItemsSwipeRefreshLayout extends SwipeRefreshLayout {
         }
         return super.canChildScrollUp();
     }
+
+
+
 
     public void setScrollUpChild(View view) {
         mScrollUpChild = view;

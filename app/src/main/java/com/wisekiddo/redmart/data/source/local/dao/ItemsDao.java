@@ -1,4 +1,4 @@
-package com.wisekiddo.redmart.data.source.local;
+package com.wisekiddo.redmart.data.source.local.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -24,7 +24,7 @@ public interface ItemsDao {
      *
      * @return all items.
      */
-    @Query("SELECT * FROM Items")
+    @Query("SELECT * FROM Item")
     List<Item> getItems();
 
     /**
@@ -33,8 +33,8 @@ public interface ItemsDao {
      * @param itemId the item id.
      * @return the item with itemId.
      */
-    @Query("SELECT * FROM Items WHERE id = :itemId")
-    Item getItemById(String itemId);
+    @Query("SELECT * FROM Item WHERE id = :itemId")
+    Item getItemById(Integer itemId);
 
     /**
      * Insert a item in the database. If the item already exists, replace it.

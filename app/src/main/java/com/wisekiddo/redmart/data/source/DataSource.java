@@ -24,7 +24,7 @@ public interface DataSource {
 
     void getItems(@NonNull LoadItemsCallback callback);
 
-    void getItem(@NonNull String itemId, @NonNull GetItemCallback callback);
+    void getItem(@NonNull Integer itemId, @NonNull GetItemCallback callback);
 
     void saveItem(@NonNull Item item);
 
@@ -32,6 +32,6 @@ public interface DataSource {
 
     void deleteAllItems();
 
-    void deleteItem(@NonNull String itemId);
+    void deleteItem(@NonNull Integer itemId);
 
 }

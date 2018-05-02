@@ -63,6 +63,7 @@ ext {
     roomVersion = '1.0.0'
     lifecycleVersion = '1.0.0'
 
+    BASE_API_URL = "https://api.redmart.com/";
 
 }
 

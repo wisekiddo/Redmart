@@ -2,20 +2,25 @@ package com.wisekiddo.redmart.data.source.remote;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.common.collect.Lists;
+import com.wisekiddo.redmart.data.model.Catalog;
 import com.wisekiddo.redmart.data.model.Item;
 import com.wisekiddo.redmart.data.source.DataSource;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by ronald on 13/3/18.
- * Implementation of the data source that adds a latency simulating network.
  */
 
 @Singleton
@@ -23,22 +28,25 @@ public class RemoteDataSource implements DataSource {
 
     private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
 
-    private final static Map<String, Item> ITEMS_SERVICE_DATA;
+    private final static Map<Integer, Item> ITEMS_SERVICE_DATA;
+
+    private ApiService service;
 
     static {
-
-        final int RANGE = 100000;
-        ITEMS_SERVICE_DATA = new LinkedHashMap<>(RANGE);
+        //For test, TODO: male a mockito
+        /*
+       final int RANGE = 100;
+       ITEMS_SERVICE_DATA = new LinkedHashMap<>(RANGE);
         for (int i=RANGE;i<RANGE+RANGE;i++) {
-            addItem("Title:"+(i+1), "Ground looks good,"+ (i+1)+" no foundation work required.");
-
+           addItem("Title:"+(i+1), "Ground looks good,"+ (i+1)+" no foundation work required.");
         }
+        */
     }
+    public RemoteDataSource(){}
 
-    public RemoteDataSource() {}
 
     private static void addItem(String title, String description) {
-        Item newItem = new Item(title, description);
+        Item newItem = new Item(title, description, 1);
         ITEMS_SERVICE_DATA.put(newItem.getId(), newItem);
     }
 
@@ -52,10 +60,61 @@ public class RemoteDataSource implements DataSource {
                 callback.onItemsLoaded(Lists.newArrayList(ITEMS_SERVICE_DATA.values()));
             }
         }, SERVICE_LATENCY_IN_MILLIS);
+        service = ApiClient.getClient().create(ApiService.class);
+        loadNextPage(0);
+
+    }
+    private void loadNextPage(Integer page) {
+
+        Call<Catalog> catalogResponseCall = service.getSource(page,100);
+        catalogResponseCall.enqueue(new Callback<Catalog>() {
+            @Override
+            public void onResponse(Call<Catalog> call, Response<Catalog> response) {
+
+                if (response.isSuccessful()) {
+                    Log.i("--->",response.body().getPage()+"");
+                    List<Item> results = fetchResults(response);
+                    // adapter.addAll(results);
+                    Integer page = response.body().getPage().intValue() + 1;
+                    Integer total = response.body().getTotal().intValue();
+                    if(page<total){
+
+                        loadNextPage(page);
+                    }                }
+                else {
+                    // error case
+                    switch (response.code()) {
+                        case 404:
+                            Log.e(this.getClass().getSimpleName(), "not found : 404");
+                            break;
+                        case 500:
+                            Log.e(this.getClass().getSimpleName(), "server broken: 500");
+                            break;
+                        default:
+                            Log.e(this.getClass().getSimpleName(), "unknown error");
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Catalog> call, Throwable t) {
+                t.printStackTrace();
+                // TODO: 08/11/16 handle failure
+            }
+        });
+    }
+    /**
+     * @param response extracts List<{@link Item>} from response
+     * @return
+     */
+    private List<Item> fetchResults(Response<Catalog> response) {
+        Catalog catalog = response.body();
+        return catalog.getItems();
     }
 
     @Override
-    public void getItem(@NonNull String itemId, final @NonNull GetItemCallback callback) {
+    public void getItem(@NonNull Integer itemId, final @NonNull GetItemCallback callback) {
         final Item item = ITEMS_SERVICE_DATA.get(itemId);
 
         // Simulate network by delaying the execution.
@@ -67,6 +126,9 @@ public class RemoteDataSource implements DataSource {
             }
         }, SERVICE_LATENCY_IN_MILLIS);
     }
+
+
+
 
     @Override
     public void saveItem(@NonNull Item item) {
@@ -86,7 +148,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void deleteItem(@NonNull String itemId) {
+    public void deleteItem(@NonNull Integer itemId) {
         ITEMS_SERVICE_DATA.remove(itemId);
     }
 }

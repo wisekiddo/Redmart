@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 
 import com.wisekiddo.redmart.data.source.local.ApplicationDatabase;
-import com.wisekiddo.redmart.data.source.local.ItemsDao;
+import com.wisekiddo.redmart.data.source.local.dao.ItemsDao;
 import com.wisekiddo.redmart.data.source.local.Local;
 import com.wisekiddo.redmart.data.source.local.LocalDataSource;
 import com.wisekiddo.redmart.data.source.remote.Remote;
@@ -36,6 +36,7 @@ public class RepositoryModule {
     @Provides
     @Remote
     DataSource provideItemsRemoteDataSource() {
+
         return new RemoteDataSource();
     }
 

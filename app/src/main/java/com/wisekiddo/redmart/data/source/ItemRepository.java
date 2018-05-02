@@ -25,7 +25,7 @@ public class ItemRepository implements DataSource {
 
     private final DataSource itemsLocalDataSource;
 
-    Map<String, Item> mCachedItems;
+    Map<Integer, Item> mCachedItems;
 
     boolean mCacheIsDirty = false;
 
@@ -80,7 +80,7 @@ public class ItemRepository implements DataSource {
     }
 
     @Override
-    public void getItem(@NonNull final String itemId, @NonNull final GetItemCallback callback) {
+    public void getItem(@NonNull final Integer itemId, @NonNull final GetItemCallback callback) {
         checkNotNull(itemId);
         checkNotNull(callback);
 
@@ -145,7 +145,7 @@ public class ItemRepository implements DataSource {
     }
 
     @Override
-    public void deleteItem(@NonNull String itemId) {
+    public void deleteItem(@NonNull Integer itemId) {
         itemsRemoteDataSource.deleteItem(checkNotNull(itemId));
         itemsLocalDataSource.deleteItem(checkNotNull(itemId));
 
@@ -187,7 +187,7 @@ public class ItemRepository implements DataSource {
     }
 
     @Nullable
-    private Item getItemWithId(@NonNull String id) {
+    private Item getItemWithId(@NonNull Integer id) {
         checkNotNull(id);
         if (mCachedItems == null || mCachedItems.isEmpty()) {
             return null;

@@ -4,26 +4,28 @@ package com.wisekiddo.redmart.data.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
+
 public class Pricing {
 
     @SerializedName("on_sale")
     @Expose
-    private Integer onSale;
+    private Double onSale;
     @SerializedName("price")
     @Expose
     private Double price;
     @SerializedName("promo_price")
     @Expose
-    private Integer promoPrice;
+    private Double promoPrice;
     @SerializedName("savings")
     @Expose
-    private Integer savings;
+    private Double savings;
 
-    public Integer getOnSale() {
+    public Double getOnSale() {
         return onSale;
     }
 
-    public void setOnSale(Integer onSale) {
+    public void setOnSale(Double onSale) {
         this.onSale = onSale;
     }
 
@@ -35,22 +37,21 @@ public class Pricing {
         this.price = price;
     }
 
-    public Integer getPromoPrice() {
+    public Double getPromoPrice() {
         return promoPrice;
     }
 
-    public void setPromoPrice(Integer promoPrice) {
+    public void setPromoPrice(Double promoPrice) {
         this.promoPrice = promoPrice;
     }
 
-    public Integer getSavings() {
+    public Double getSavings() {
         return savings;
     }
 
-    public void setSavings(Integer savings) {
+    public void setSavings(Double savings) {
         this.savings = savings;
     }
-
 
 
 }

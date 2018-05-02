@@ -41,7 +41,6 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
      * Listener for clicks on items in the ListView.
      */
 
-
     private ItemsAdapter listAdapter;
     private View noItemsView;
     private ImageView noItemIcon;
@@ -105,16 +104,6 @@ public class ItemsFragment extends DaggerFragment implements ItemsContract.View 
         noItemIcon = root.findViewById(R.id.noItemsIcon);
         mNoItemMainView = root.findViewById(R.id.noItemsMain);
 
-        // Set up floating action button
-       // FloatingActionButton fab = getActivity().findViewById(R.id.fab_add_item);
-/*
-        fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //presenter.addNewItem();
-            }
-        });*/
 
         // Set up progress indicator
         final ItemsSwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.refresh_layout);
