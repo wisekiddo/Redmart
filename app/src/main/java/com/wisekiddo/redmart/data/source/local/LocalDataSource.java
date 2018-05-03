@@ -2,6 +2,7 @@ package com.wisekiddo.redmart.data.source.local;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Optional;
 import com.wisekiddo.redmart.data.model.Item;
 import com.wisekiddo.redmart.data.source.DataSource;
 import com.wisekiddo.redmart.data.source.local.dao.ItemsDao;
@@ -11,6 +12,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import io.reactivex.Flowable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,6 +35,16 @@ public class LocalDataSource implements DataSource {
     public LocalDataSource(@NonNull ApplicationExecutors executors, @NonNull ItemsDao tasksDao) {
         mItemsDao = tasksDao;
         mApplicationExecutors = executors;
+    }
+
+    @Override
+    public Flowable<List<Item>> getItems() {
+        return null;
+    }
+
+    @Override
+    public Flowable<Optional<Item>> getItem(@NonNull Integer taskId) {
+        return null;
     }
 
     @Override

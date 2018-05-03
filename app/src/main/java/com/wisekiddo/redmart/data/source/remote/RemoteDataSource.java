@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.wisekiddo.redmart.data.model.Catalog;
 import com.wisekiddo.redmart.data.model.Item;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
+import io.reactivex.Flowable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +47,16 @@ public class RemoteDataSource implements DataSource {
     }
     public RemoteDataSource(){}
 
+
+    @Override
+    public Flowable<List<Item>> getItems() {
+        return null;
+    }
+
+    @Override
+    public Flowable<Optional<Item>> getItem(@NonNull Integer taskId) {
+        return null;
+    }
 
     @Override
     public void getItems(final @NonNull LoadItemsCallback callback) {

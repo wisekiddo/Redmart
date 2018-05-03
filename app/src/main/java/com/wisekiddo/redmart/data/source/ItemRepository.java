@@ -3,6 +3,7 @@ package com.wisekiddo.redmart.data.source;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.Optional;
 import com.wisekiddo.redmart.data.model.Item;
 import com.wisekiddo.redmart.data.source.local.Local;
 import com.wisekiddo.redmart.data.source.remote.Remote;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import io.reactivex.Flowable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,6 +35,16 @@ public class ItemRepository implements DataSource {
                    @Local DataSource itemsLocalDataSource) {
         this.itemsRemoteDataSource = itemsRemoteDataSource;
         this.itemsLocalDataSource = itemsLocalDataSource;
+    }
+
+    @Override
+    public Flowable<List<Item>> getItems() {
+        return null;
+    }
+
+    @Override
+    public Flowable<Optional<Item>> getItem(@NonNull Integer taskId) {
+        return null;
     }
 
     @Override
@@ -64,18 +77,7 @@ public class ItemRepository implements DataSource {
         }
     }
 
-    @Override
-    public void saveItem(@NonNull Item item) {
-        checkNotNull(item);
-        itemsRemoteDataSource.saveItem(item);
-        itemsLocalDataSource.saveItem(item);
 
-        // Do in memory cache update to keep the app UI up to date
-        if (mCachedItems == null) {
-            mCachedItems = new LinkedHashMap<>();
-        }
-        mCachedItems.put(item.getId(), item);
-    }
 
     @Override
     public void getItem(@NonNull final Integer itemId, @NonNull final GetItemCallback callback) {
@@ -124,6 +126,19 @@ public class ItemRepository implements DataSource {
                 });
             }
         });
+    }
+
+    @Override
+    public void saveItem(@NonNull Item item) {
+        checkNotNull(item);
+        itemsRemoteDataSource.saveItem(item);
+        itemsLocalDataSource.saveItem(item);
+
+        // Do in memory cache update to keep the app UI up to date
+        if (mCachedItems == null) {
+            mCachedItems = new LinkedHashMap<>();
+        }
+        mCachedItems.put(item.getId(), item);
     }
 
     @Override

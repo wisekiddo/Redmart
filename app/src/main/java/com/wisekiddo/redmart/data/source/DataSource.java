@@ -2,9 +2,12 @@ package com.wisekiddo.redmart.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Optional;
 import com.wisekiddo.redmart.data.model.Item;
 
 import java.util.List;
+
+import io.reactivex.Flowable;
 
 public interface DataSource {
 
@@ -21,6 +24,9 @@ public interface DataSource {
 
         void onDataNotAvailable();
     }
+
+    Flowable<List<Item>> getItems();
+    Flowable<Optional<Item>> getItem(@NonNull Integer taskId);
 
     void getItems(@NonNull LoadItemsCallback callback);
 
