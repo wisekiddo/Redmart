@@ -36,17 +36,7 @@ public class ItemRepository implements DataSource {
         this.itemsRemoteDataSource = itemsRemoteDataSource;
         this.itemsLocalDataSource = itemsLocalDataSource;
     }
-
-    @Override
-    public Flowable<List<Item>> getItems() {
-        return null;
-    }
-
-    @Override
-    public Flowable<Optional<Item>> getItem(@NonNull Integer taskId) {
-        return null;
-    }
-
+    
     @Override
     public void getItems(@NonNull final LoadItemsCallback callback) {
         checkNotNull(callback);

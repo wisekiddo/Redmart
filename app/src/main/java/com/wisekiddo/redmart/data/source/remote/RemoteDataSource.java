@@ -13,6 +13,7 @@ import com.wisekiddo.redmart.data.source.DataSource;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
@@ -47,17 +48,6 @@ public class RemoteDataSource implements DataSource {
     }
     public RemoteDataSource(){}
 
-
-    @Override
-    public Flowable<List<Item>> getItems() {
-        return null;
-    }
-
-    @Override
-    public Flowable<Optional<Item>> getItem(@NonNull Integer taskId) {
-        return null;
-    }
-
     @Override
     public void getItems(final @NonNull LoadItemsCallback callback) {
         // Simulate network by delaying the execution.
@@ -70,6 +60,16 @@ public class RemoteDataSource implements DataSource {
         }, SERVICE_LATENCY_IN_MILLIS);
         service = ApiClient.getClient().create(ApiService.class);
         loadNextPage(0);
+
+        /*
+
+        return Flowable
+                .fromIterable(mapItems.values())
+                .delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS)
+                .toList()
+                .toFlowable();
+         */
+
 
     }
     private void loadNextPage(Integer page) {
@@ -175,6 +175,17 @@ public class RemoteDataSource implements DataSource {
             }
         }, SERVICE_LATENCY_IN_MILLIS);
 
+
+        /*
+
+         final Item task = mapItems.get(taskId);
+        if (task != null) {
+            return Flowable.just(Optional.of(task)).delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS);
+        } else {
+            return Flowable.empty();
+        }
+
+         */
     }
 
 

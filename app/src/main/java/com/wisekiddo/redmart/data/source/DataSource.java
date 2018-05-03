@@ -8,6 +8,7 @@ import com.wisekiddo.redmart.data.model.Item;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 public interface DataSource {
 
@@ -25,11 +26,10 @@ public interface DataSource {
         void onDataNotAvailable();
     }
 
-    Flowable<List<Item>> getItems();
-    Flowable<Optional<Item>> getItem(@NonNull Integer taskId);
+    //Flowable<List<Item>> getItems(@NonNull LoadItemsCallback callback);
+    //Maybe<Item> getItem(@NonNull Integer itemId, @NonNull GetItemCallback callback);
 
     void getItems(@NonNull LoadItemsCallback callback);
-
     void getItem(@NonNull Integer itemId, @NonNull GetItemCallback callback);
 
     void saveItem(@NonNull Item item);

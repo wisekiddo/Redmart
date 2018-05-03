@@ -10,6 +10,9 @@ import com.wisekiddo.redmart.data.model.Item;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+
 /**
  * Created by ronald on 28/4/18.
  *
@@ -25,7 +28,8 @@ public interface ItemsDao {
      * @return all items.
      */
     @Query("SELECT * FROM Item")
-    List<Item> getItems();
+    Flowable<List<Item>> getItems();
+    //    List<Item> getItems();
 
     /**
      * Select a item by id.
@@ -33,8 +37,11 @@ public interface ItemsDao {
      * @param itemId the item id.
      * @return the item with itemId.
      */
+   // @Query("SELECT * FROM Item WHERE id = :itemId")
+   // Item getItemById(Integer itemId);
+
     @Query("SELECT * FROM Item WHERE id = :itemId")
-    Item getItemById(Integer itemId);
+    Maybe<Item> getItemById(Integer itemId);
 
     /**
      * Insert a item in the database. If the item already exists, replace it.

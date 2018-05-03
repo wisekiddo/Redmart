@@ -2,7 +2,7 @@ package com.wisekiddo.redmart.data.source.local;
 
 import android.support.annotation.NonNull;
 
-import com.google.common.base.Optional;
+
 import com.wisekiddo.redmart.data.model.Item;
 import com.wisekiddo.redmart.data.source.DataSource;
 import com.wisekiddo.redmart.data.source.local.dao.ItemsDao;
@@ -13,7 +13,15 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,65 +40,65 @@ public class LocalDataSource implements DataSource {
     private final ApplicationExecutors mApplicationExecutors;
 
     @Inject
-    public LocalDataSource(@NonNull ApplicationExecutors executors, @NonNull ItemsDao tasksDao) {
-        mItemsDao = tasksDao;
+    public LocalDataSource(@NonNull ApplicationExecutors executors, @NonNull ItemsDao itemDao) {
+        mItemsDao = itemDao;
         mApplicationExecutors = executors;
     }
 
-    @Override
-    public Flowable<List<Item>> getItems() {
-        return null;
-    }
-
-    @Override
-    public Flowable<Optional<Item>> getItem(@NonNull Integer taskId) {
-        return null;
-    }
 
     @Override
     public void getItems(@NonNull final LoadItemsCallback callback) {
-        Runnable runnable = new Runnable() {
+        mItemsDao.getItems().subscribeOn(Schedulers.io()).
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribe(new Consumer<List<Item>>() {
             @Override
-            public void run() {
-                final List<Item> items = mItemsDao.getItems();
-                mApplicationExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (items.isEmpty()) {
-                            // This will be called if the table is new or just empty.
-                            callback.onDataNotAvailable();
-                        } else {
-                            callback.onItemsLoaded(items);
-                        }
-                    }
-                });
+            public void accept(@io.reactivex.annotations.NonNull List<Item> items) throws Exception {
+                callback.onItemsLoaded(items);
+                //callback.onDataNotAvailable();
             }
-        };
-
-        mApplicationExecutors.diskIO().execute(runnable);
+        });
     }
+
+
+
+    /*
+        @Override
+        public void getItems(@NonNull final LoadItemsCallback callback) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    final List<Item> items = mItemsDao.getItems();
+                    mApplicationExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (items.isEmpty()) {
+                                // This will be called if the table is new or just empty.
+                                callback.onDataNotAvailable();
+                            } else {
+                                callback.onItemsLoaded(items);
+                            }
+                        }
+                    });
+                }
+            };
+
+            mApplicationExecutors.diskIO().execute(runnable);
+        }
+    */
 
     @Override
     public void getItem(@NonNull final Integer id, @NonNull final GetItemCallback callback) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                final Item item = mItemsDao.getItemById(id);
-
-                mApplicationExecutors.mainThread().execute(new Runnable() {
+        mItemsDao.getItemById(id).subscribeOn(Schedulers.io()).
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribe(new Consumer<Item>() {
                     @Override
-                    public void run() {
-                        if (item != null) {
-                            callback.onItemLoaded(item);
-                        } else {
-                            callback.onDataNotAvailable();
-                        }
+                    public void accept(@io.reactivex.annotations.NonNull Item item) throws Exception {
+                        callback.onItemLoaded(item);
                     }
+                    //callback.onDataNotAvailable();
                 });
-            }
-        };
 
-        mApplicationExecutors.diskIO().execute(runnable);
+
     }
 
     @Override
