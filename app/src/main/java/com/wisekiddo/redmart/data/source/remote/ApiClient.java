@@ -36,3 +36,16 @@ public class ApiClient {
     }
 
 }
+
+    /**     Setting Interceptor Chain
+
+     *  chain -> {
+     Request request = chain.request();
+     Request newReq =
+     request
+     .newBuilder()
+     .addHeader("Authorization", format("token %s", githubToken))
+     .build();
+     return chain.proceed(newReq);
+     })
+     */
